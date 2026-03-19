@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ABP/SIMPL | Resident Guide to Assessment and Practice Readiness</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&family=Source+Serif+4:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+button{font-family:inherit}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
+<script type="text/babel">
+const { useState, useRef, useEffect, useCallback } = React;
+
+const C = {
+  bg: "#FAFAF8", surface: "#FFFFFF", tint: "#F7F5F0", amber: "#9A7B2C",
+  amberSub: "#FFF7E3", text: "#2D3039", text2: "#5A5E6B", border: "#E4E3DE",
+  accent: "#C9A23D", green: "#2D6A4F", greenSub: "#E8F5E9",
+};
+const serif = "'Source Serif 4', Georgia, serif";
+const sans = "'Source Sans 3', 'Segoe UI', sans-serif";
+const ps = { fontFamily: sans, fontSize: 14.5, lineHeight: 1.75, color: C.text, margin: "0 0 14px" };
+
+const TABS = [
+  { id: "why", label: "The Why", icon: "🎯" },
+  { id: "tool", label: "The Platform", icon: "📱" },
+  { id: "dashboard", label: "Your Dashboard & Data", icon: "📊" },
+  { id: "data-use", label: "How Data Is Used", icon: "🔍" },
+  { id: "challenges", label: "Honest Challenges", icon: "💡" },
+];
+
+const EPAS = [
+  { n: 1, short: "Preventive Primary Care", desc: "Well-child visits across all ages — anticipatory guidance, screening, immunizations, developmental surveillance.", forms: "Well Child Visit (Primary Care)" },
+  { n: 2, short: "Complex/Chronic Care", desc: "Ongoing management of children with conditions requiring coordinated, longitudinal care.", forms: "Complex/Chronic Care Visit, Follow-Up Visit (Primary Care)" },
+  { n: 3, short: "Common Acute Diagnoses", desc: "Evaluating and treating acute illness presentations across settings — the most commonly assessed EPA.", forms: "Acute Common Problem (ED, Primary Care, Inpatient)" },
+  { n: 4, short: "Behavior & Mental Health", desc: "Recognizing and initiating management for ADHD, anxiety, depression, and behavioral concerns.", forms: "Behavior/Mental Health Problem (ED, Primary Care)" },
+  { n: 5, short: "Newborn Care", desc: "Newborn assessment, management, and family education from birth through discharge.", forms: "Newborn Care, Delivery Room Care (Nursery, NICU)" },
+  { n: 6, short: "Subspecialty Referral", desc: "Identifying when a child needs subspecialty input, initiating workup, and communicating with consultants.", forms: "Consult a Subspecialist/Surgeon (ED, Inpatient, NICU/PICU)" },
+  { n: 7, short: "Severely Ill Patient", desc: "Recognizing the acutely decompensating child, initiating stabilization, and arranging disposition. Not ICU management — recognizing sick and acting.", forms: "Immediate Intervention (ED), Decompensating Patient (NICU/PICU), Acute Care Transfer (Primary Care)" },
+  { n: 8, short: "Clinical Handovers", desc: "Safe, effective transitions of care — admissions, discharges, transfers, shift changes.", forms: "Handover (ED, Inpatient, NICU/PICU)" },
+  { n: 9, short: "Procedures", desc: "Procedures a general pediatrician would perform in practice — not subspecialty procedures.", forms: "Procedure (ED, Inpatient, NICU/PICU, Primary Care)" },
+  { n: 10, short: "Interprofessional Teams", desc: "Working with nurses, social workers, therapists, and other team members to coordinate family-centered care.", forms: "Lead a Team / Supervise Others (ED, Inpatient, NICU/PICU)" },
+  { n: 11, short: "Health Equity", desc: "Recognizing and addressing how racism and structural factors affect individual patients and populations.", forms: "Promoting Health Equity (Narrative-Only), embedded in EPA assessments" },
+  { n: 12, short: "Technology & Evidence", desc: "Using evidence, clinical decision tools, and technology effectively in practice.", forms: "Information Sources and Evidence (All Settings)" },
+];
+
+const SCALE = [
+  { level: "1", title: "Supervisor Performed", color: "#E74C3C", summary: "Resident was an observer.", detail: "The supervisor performed the activity. You observed but were not yet ready to actively participate in leading the care." },
+  { level: "2", title: "Supervisor Led Care", color: "#E67E22", summary: "Supervisor directed the majority of care.", detail: "Required supervising physician(s) to direct the majority of the care. The supervisor led and you assisted or performed portions under close direction." },
+  { level: "3", title: "Supervisor & Resident Co-Led", color: "#F1C40F", summary: "Supervisor directed some aspects of care.", detail: "Required supervising physician(s) to direct some aspects of the care. You and your supervisor co-led, with the supervisor stepping in to guide specific elements." },
+  { level: "4", title: "Resident Led, Minimal Supervision", color: "#27AE60", summary: "You directed care; only small adjustments needed.", detail: "Resident directed care, supervision only led to small adjustments. You led the encounter and the supervisor’s involvement was limited to minor refinements." },
+  { level: "5", title: "Resident Led, No Supervision Needed", color: "#2D6A4F", summary: "Care would have been safe and effective without a supervisor.", detail: "May benefit from continued learning and growth; however, care would have been safe and effective without a supervisor. This does not mean you are done learning — it means for this encounter, you did not need someone overseeing the care." },
+];
+
+const CCC_SCALE = [
+  { level: "1", title: "Observation Only", desc: "Supervisor performs. Trainee is not ready to actively participate." },
+  { level: "2", title: "Performs with Supervisor Present", desc: "2A: Co-activity with supervisor. 2B: Supervisor in room, ready to step in." },
+  { level: "3", title: "Performs with Supervisor Available", desc: "3A: Close support/oversight. 3B: Moderate support/oversight. Supervisor readily available but not always present." },
+  { level: "4", title: "Limited Support & Oversight", desc: "Supervisor still required for safety but does not need to be readily available. NOT yet practice ready." },
+  { level: "5", title: "Practice Ready", desc: "No supervisor required. Performs without supervision. Knows limits and seeks input when needed." },
+];
+
+function Exp({ title, children, open: defaultOpen = false }) {
+  const [open, setOpen] = useState(defaultOpen);
+  const ref = useRef(null);
+  const [h, setH] = useState(0);
+  useEffect(() => { if (ref.current) setH(ref.current.scrollHeight); }, [open, children]);
+  return (
+    <div style={{ marginBottom: 8 }}>
+      <button onClick={() => setOpen(!open)} style={{ display: "flex", alignItems: "flex-start", gap: 12, width: "100%", border: open ? "1px solid " + C.border : "1px solid transparent", background: open ? C.surface : "transparent", borderRadius: 10, padding: "13px 16px", cursor: "pointer", textAlign: "left", transition: "all .2s" }}
+        onMouseEnter={e => { if (!open) { e.currentTarget.style.background = C.tint; e.currentTarget.style.borderColor = C.border; } }}
+        onMouseLeave={e => { if (!open) { e.currentTarget.style.background = "transparent"; e.currentTarget.style.borderColor = "transparent"; } }}>
+        <span style={{ color: C.amber, fontSize: 13, fontWeight: 700, flexShrink: 0, marginTop: 3, transition: "transform .2s", transform: open ? "rotate(90deg)" : "rotate(0)", display: "inline-block" }}>{"▸"}</span>
+        <span style={{ fontFamily: serif, fontSize: 15.5, fontWeight: 700, color: C.text, lineHeight: 1.45 }}>{title}</span>
+      </button>
+      <div style={{ maxHeight: open ? h + 20 : 0, overflow: "hidden", transition: "max-height .35s ease" }}>
+        <div ref={ref} style={{ padding: "2px 16px 12px 44px", color: C.text2, fontFamily: sans, fontSize: 14.5, lineHeight: 1.72 }}>{children}</div>
+      </div>
+    </div>
+  );
+}
+
+function Callout({ children, type = "amber" }) {
+  return <div style={{ background: type === "green" ? C.greenSub : C.amberSub, borderLeft: "3px solid " + (type === "green" ? C.green : C.amber), borderRadius: "0 10px 10px 0", padding: "14px 18px", margin: "16px 0", fontFamily: serif, fontSize: 15, fontWeight: 600, color: C.text, lineHeight: 1.5 }}>{children}</div>;
+}
+
+function Tip({ children, def }) {
+  const [show, setShow] = useState(false);
+  return (
+    <span style={{ position: "relative", display: "inline" }}>
+      <span onMouseEnter={() => setShow(true)} onMouseLeave={() => setShow(false)} onClick={() => setShow(!show)}
+        style={{ color: C.amber, fontWeight: 600, borderBottom: "1.5px dotted " + C.accent, cursor: "help" }}>{children}</span>
+      {show && <span style={{ position: "absolute", bottom: "calc(100% + 10px)", left: "50%", transform: "translateX(-50%)", background: C.text, color: "#F0F0EE", padding: "11px 15px", borderRadius: 10, fontSize: 13, lineHeight: 1.55, width: 280, zIndex: 100, boxShadow: "0 8px 30px rgba(0,0,0,.15)", fontFamily: sans, fontWeight: 400 }}>
+        {def}<span style={{ position: "absolute", top: "100%", left: "50%", transform: "translateX(-50%)", borderLeft: "7px solid transparent", borderRight: "7px solid transparent", borderTop: "7px solid " + C.text }} />
+      </span>}
+    </span>
+  );
+}
+
+function ExBox({ children }) {
+  return <div style={{ background: C.tint, borderRadius: 10, padding: "14px 16px", border: "1px solid " + C.border, fontSize: 14, lineHeight: 1.65, color: C.text2, margin: "12px 0" }}>
+    <div style={{ fontSize: 10.5, textTransform: "uppercase", letterSpacing: ".12em", color: C.amber, fontWeight: 700, marginBottom: 6, fontFamily: sans }}>Example</div>
+    {children}
+  </div>;
+}
+
+function SH({ title, sub }) {
+  return <>
+    <h2 style={{ fontFamily: serif, fontSize: 24, fontWeight: 700, color: C.text, margin: "0 0 5px", lineHeight: 1.3 }}>{title}</h2>
+    <div style={{ fontFamily: sans, fontSize: 13, color: C.amber, fontWeight: 600, letterSpacing: ".02em", marginBottom: 20 }}>{sub}</div>
+  </>;
+}
+
+function H3({ children }) { return <h3 style={{ fontFamily: serif, fontSize: 18, fontWeight: 700, color: C.text, margin: "28px 0 12px" }}>{children}</h3>; }
+function Div() { return <div style={{ height: 1, background: C.border, margin: "32px 0" }} />; }
+
+/* ===== TAB CONTENT COMPONENTS ===== */
+
+function TabWhy() {
+  const [selEpa, setSelEpa] = useState(null);
+  return <>
+    <SH title="Why This System Exists" sub="The Goals Behind the Change" />
+    <p style={ps}>This assessment system was not created to add more tasks to your day. It was created because the old approach to evaluating residents was not good enough to serve patients, to serve you, or to serve the profession. This system is built around five goals:</p>
+
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))", gap: 10, margin: "8px 0 24px" }}>
+      {[
+        { icon: "❤️", t: "Center patients", d: "Ensure graduates can meet the needs of the children they serve" },
+        { icon: "🎓", t: "Center learners", d: "Give you transparency, agency, and feedback that drives growth" },
+        { icon: "📈", t: "Improve the data", d: "Replace gestalt impressions with frequent, specific, observed evidence" },
+        { icon: "⚖️", t: "Improve equity", d: "Build structures that promote fairness and mitigate bias" },
+        { icon: "🔄", t: "Assessment & growth", d: "One system that serves both learning and high-stakes decisions" },
+      ].map((g, i) => (
+        <div key={i} style={{ background: C.surface, border: "1px solid " + C.border, borderRadius: 12, padding: "14px 12px", textAlign: "center" }}>
+          <div style={{ fontSize: 22, marginBottom: 6 }}>{g.icon}</div>
+          <div style={{ fontFamily: serif, fontSize: 13.5, fontWeight: 700, color: C.text, marginBottom: 4, lineHeight: 1.3 }}>{g.t}</div>
+          <div style={{ fontFamily: sans, fontSize: 11.5, color: C.text2, lineHeight: 1.5 }}>{g.d}</div>
+        </div>
+      ))}
+    </div>
+
+    <H3>What Are EPAs?</H3>
+    <p style={ps}>Traditional assessment systems evaluate residents on broad domains of competence like "medical knowledge" or "professionalism." These are important, but they do not directly answer the question that matters most: can this person actually do the work of a pediatrician?</p>
+    <p style={ps}><Tip def="Entrustable Professional Activities are the essential tasks that define what a pediatrician does. Each represents a unit of clinical work that can be observed, assessed, and — when a trainee is ready — entrusted to them without supervision.">Entrustable Professional Activities (EPAs)</Tip> were created to answer that question. Each EPA defines an essential activity of practice — something a general pediatrician actually does — that can be directly observed, assessed, and ultimately entrusted to you. Instead of asking "does this resident have enough medical knowledge?", the system asks "can this resident manage an acutely ill child?" or "can this resident provide a well-child visit?" The 12 General Pediatrics EPAs together define the scope of what it means to practice as a general pediatrician. Tap any below to learn more.</p>
+
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(190px, 1fr))", gap: 10, margin: "12px 0 20px" }}>
+      {EPAS.map(e => (
+        <button key={e.n} onClick={() => setSelEpa(selEpa === e.n ? null : e.n)}
+          style={{ background: selEpa === e.n ? C.amberSub : C.surface, border: "1px solid " + (selEpa === e.n ? C.amber : C.border), borderRadius: 10, padding: "12px 14px", cursor: "pointer", textAlign: "left", transition: "all .15s" }}>
+          <div style={{ fontFamily: sans, fontSize: 11, fontWeight: 700, color: C.amber, marginBottom: 4 }}>EPA {e.n}</div>
+          <div style={{ fontFamily: serif, fontSize: 13.5, fontWeight: 600, color: C.text, lineHeight: 1.35 }}>{e.short}</div>
+        </button>
+      ))}
+    </div>
+    {selEpa && (() => { const e = EPAS.find(x => x.n === selEpa); return (
+      <div style={{ background: C.surface, border: "1px solid " + C.border, borderRadius: 12, padding: "18px 20px", marginBottom: 16 }}>
+        <div style={{ fontFamily: sans, fontSize: 11, fontWeight: 700, color: C.amber, marginBottom: 4 }}>EPA {e.n}</div>
+        <div style={{ fontFamily: serif, fontSize: 17, fontWeight: 700, color: C.text, marginBottom: 8 }}>{e.short}</div>
+        <p style={{ fontFamily: sans, fontSize: 14, color: C.text2, lineHeight: 1.6, margin: "0 0 10px" }}>{e.desc}</p>
+        <div style={{ fontFamily: sans, fontSize: 12.5, color: C.amber, fontWeight: 600 }}>Forms: <span style={{ fontWeight: 400, color: C.text2 }}>{e.forms}</span></div>
+      </div>
+    ); })()}
+    <p style={{ ...ps, fontSize: 13, color: C.text2, fontStyle: "italic" }}>On the app, forms use plain clinical titles. You will not see "EPA 3" — you will see "Acute Common Problem." Your dashboard rolls data up by EPA.</p>
+
+    <Div />
+
+    <H3>What Does Practice Ready Mean?</H3>
+    <Callout>The required outcome of training for graduation and to be eligible to become board certified is to be practice ready across all of the General Pediatrics EPAs.</Callout>
+    <p style={ps}>A <strong>practice ready</strong> trainee can provide safe and effective care without assigned supervision in the context of a post-training collaborative practice environment in the discipline in which they have been trained.</p>
+    <p style={ps}><strong>Safe and effective, not expert.</strong> The bar is foundational capability, not mastery. Every practicing pediatrician has areas for continued growth.</p>
+    <p style={ps}><strong>Without assigned supervision, not without support.</strong> Pediatrics is inherently collaborative. No one needs to be assigned to oversee your work {"—"} but you still consult colleagues, use resources, and work within teams. Think of getting a driver's license: you can drive without someone in the passenger seat, but you still use GPS and call for directions.</p>
+    <p style={ps}><strong>Based on your training discipline, not your next job.</strong> The standard does not change based on fellowship plans. Plans change, environments change, foundational skills do not.</p>
+    <p style={ps}><strong>A foundation, not a ceiling.</strong> You are not expected to be practice ready on day one. Many of you will advance well beyond this threshold, pursuing goals in research, advocacy, QI, fellowship prep, or other areas.</p>
+
+    <Div />
+
+    <H3>The 2028 Certification Changes</H3>
+    <p style={ps}>Beginning in 2028, the ABP will require program directors to attest that graduates are practice ready across all EPAs of their discipline as a prerequisite for initial certification. This means your CCC will need to determine you have reached Level 5 (practice ready) for each EPA before your program director can attest to the ABP.</p>
+    <p style={ps}>This replaces the current system where programs attest that graduates are "satisfactory" across general competency domains. It is not about raising the bar — it is about being transparent and evidence-informed about a bar that has always existed: graduates should be able to meet their patients' needs in practice.</p>
+    <Exp title="Why does this matter right now?">
+      <p style={{ margin: 0 }}>For current interns, these changes apply directly to your graduation. For all trainees, the system you are using now — the assessments, the dashboards, the CCC process — is building toward this. Current EPA assignments are developmental and carry no stakes, but they are practicing the decision-making that becomes consequential in 2028.</p>
+    </Exp>
+  </>;
+}
+
+function TabTool() {
+  const [selLevel, setSelLevel] = useState(null);
+  return <>
+    <SH title="The ABP/SIMPL Platform" sub="How Assessment Data Is Collected" />
+
+    <H3>A Different Approach to Assessment</H3>
+    <p style={ps}>You may be familiar with end-of-rotation evaluations: a faculty member completes a form days or weeks after a rotation ends, summarizing their overall impressions of your performance across the entire block. These evaluations are often based on general recall rather than specific observed encounters, and they tend to produce vague feedback ("good fund of knowledge," "works well with the team") that is difficult to act on.</p>
+    <p style={ps}>The ABP/SIMPL platform takes a fundamentally different approach called <Tip def="Assessment tied to specific clinical encounters in real practice environments, completed close to the time of the encounter. Captures what actually happened rather than general impressions recalled later.">workplace-based assessment (WBA)</Tip>. Instead of one summary at the end of a rotation, faculty complete brief assessments tied to specific clinical encounters, close to the time they happen. Each assessment captures what you actually did, in a real clinical situation, as observed by the supervisor who was there. This produces feedback that is specific, timely, and actionable — and generates data that accumulates into a much richer picture of your development.</p>
+
+    <div style={{ display: "flex", gap: 12, margin: "16px 0 24px" }}>
+      {[{ t: "End-of-Rotation", items: ["One form per rotation", "Completed days/weeks later", "Based on general impressions", "Vague, hard to act on", "~10 per resident per year"], bad: true },
+        { t: "Workplace-Based (SIMPL)", items: ["Many forms per rotation", "Completed within 4 days", "Tied to specific encounters", "Specific, actionable feedback", "Many more data points per year"], bad: false }
+      ].map((col, i) => (
+        <div key={i} style={{ flex: 1, background: col.bad ? C.tint : C.amberSub, border: "1px solid " + C.border, borderRadius: 12, padding: "16px 14px" }}>
+          <div style={{ fontFamily: serif, fontWeight: 700, fontSize: 14, color: C.text, marginBottom: 10 }}>{col.t}</div>
+          {col.items.map((item, j) => <div key={j} style={{ fontFamily: sans, fontSize: 13, color: C.text2, lineHeight: 1.6, paddingLeft: 12, position: "relative", marginBottom: 4 }}><span style={{ position: "absolute", left: 0 }}>{col.bad ? "–" : "✓"}</span>{item}</div>)}
+        </div>
+      ))}
+    </div>
+
+    <H3>Three Types of Forms</H3>
+    <p style={ps}>The platform collects data through three complementary assessment types, each capturing different information:</p>
+
+    <Exp title="1. EPA-Based Forms" open={true}>
+      <p style={{ margin: "0 0 8px" }}>The core of the platform. Each form maps to one of the 12 General Pediatrics EPAs and includes a supervision rating, required narrative comments (often dictated via voice-to-text), and clinical context. Forms take 1-3 minutes. The forms available change by clinical setting — "Acute Common Problem" appears in the ED but not the NICU, because managing an acute common problem in the NICU falls outside general pediatrics scope.</p>
+      <p style={{ margin: 0, fontStyle: "italic", fontSize: 13 }}>Form titles use plain clinical language, not formal EPA names. This was intentional: intuitive titles lower barriers and help assessors focus on the encounter.</p>
+    </Exp>
+    <Exp title="2. Narrative-Only Forms (KSAs)">
+      <p style={{ margin: 0 }}>These forms collect only written feedback (no supervision rating) on cross-cutting knowledge, skills, and abilities essential to all EPAs: knowing limits and seeking help, communicating with patients and families, collaborating with others, professional behaviors, high-value care, promoting health equity, and learning and growth behaviors. These skills cut across everything you do and are critical to entrustment decisions, but may not be fully captured in a single EPA encounter.</p>
+    </Exp>
+    <Exp title="3. Longitudinal Continuity Clinic Assessment">
+      <p style={{ margin: 0 }}>Completed by your continuity clinic preceptor based on observations over multiple encounters rather than a single visit. This form captures your development in the primary care setting longitudinally. Because your preceptor observes you in the general pediatrics practice environment over time, they bring an inherent understanding of what is expected of a general pediatrician in practice, making this data particularly valuable for CCC decisions.</p>
+    </Exp>
+
+    <Div />
+
+    <H3>The SIMPL Supervision Scale</H3>
+    <p style={ps}>Each EPA-based assessment includes a rating on the SIMPL Retrospective Supervision Scale. The question: <em>How much supervision did the resident need when performing this activity?</em> Importantly, this refers to supervision from any supervisor involved in the encounter — not just the person completing the form. In team-based care, fellows, senior residents, and other faculty may all contribute to supervision, and the rating is meant to capture the total picture. Tap a level to learn more.</p>
+    <div style={{ display: "flex", flexDirection: "column", gap: 6, margin: "0 0 8px" }}>
+      {SCALE.map(s => (
+        <button key={s.level} onClick={() => setSelLevel(selLevel === s.level ? null : s.level)}
+          style={{ display: "flex", alignItems: "center", gap: 12, background: selLevel === s.level ? C.surface : "transparent", border: selLevel === s.level ? "1px solid " + C.border : "1px solid transparent", borderRadius: 10, padding: "10px 14px", cursor: "pointer", textAlign: "left", transition: "all .15s", width: "100%" }}
+          onMouseEnter={e => { if (selLevel !== s.level) e.currentTarget.style.background = C.tint; }}
+          onMouseLeave={e => { if (selLevel !== s.level) e.currentTarget.style.background = "transparent"; }}>
+          <div style={{ width: 36, height: 36, borderRadius: 8, background: s.color + "18", color: s.color, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: serif, fontWeight: 700, fontSize: 15, flexShrink: 0 }}>{s.level}</div>
+          <div>
+            <div style={{ fontFamily: serif, fontSize: 14, fontWeight: 700, color: C.text }}>{s.title}</div>
+            <div style={{ fontFamily: sans, fontSize: 12.5, color: C.text2 }}>{s.summary}</div>
+          </div>
+        </button>
+      ))}
+    </div>
+    {selLevel && (() => { const s = SCALE.find(x => x.level === selLevel); return (
+      <div style={{ background: C.surface, border: "1px solid " + C.border, borderRadius: 10, padding: "14px 16px", margin: "8px 0 16px", fontFamily: sans, fontSize: 14, lineHeight: 1.65, color: C.text2 }}>
+        <span style={{ fontWeight: 700, color: s.color }}>Level {s.level}:</span> {s.detail}
+      </div>
+    ); })()}
+    <p style={{ fontFamily: sans, fontSize: 13, color: C.text2, fontStyle: "italic", margin: "8px 0 0", lineHeight: 1.6 }}>Each rating is retrospective: how much supervision was needed for this encounter, not how much was delivered, and not what you would need in future practice.</p>
+
+    <Div />
+
+    <H3>Why It Works the Way It Does: Multi-Stakeholder Tradeoffs</H3>
+    <p style={ps}>This platform serves three audiences at once: you as the learner receiving feedback, faculty completing assessments in busy clinical environments, and CCCs making high-stakes decisions about your readiness. If we designed the perfect system for any one of these groups, it would probably break for the others. Every design choice is a tradeoff between these competing needs. Understanding that helps explain decisions that might otherwise seem puzzling.</p>
+
+    <Exp title="Why narrative is required even though faculty find it burdensome" open={true}>
+      <p style={{ margin: 0 }}>Narrative comments are the single biggest driver of resident engagement and the most valuable data for CCC decisions. Faculty preferred multiple-choice for speed. We made narrative required anyway — with voice-to-text and just-in-time teaching prompts to reduce the burden. Reinforcing and constructive feedback share one text box (easier for faculty to complete, though less ideal for CCCs who benefit from distinguishing the two). This tradeoff prioritizes your learning and the quality of CCC data over assessor convenience.</p>
+    </Exp>
+    <Exp title="Why one scale across all EPAs instead of tailored scales">
+      <p style={{ margin: 0 }}>A scale tailored to each EPA would capture more nuance — better for CCCs. But asking faculty to learn and apply different scales across different activities would make the system harder to use and less likely to be completed — worse for faculty and ultimately for you. One scale focused on who led the care is simpler for everyone, easier to aggregate across settings, and still meaningful for decisions.</p>
+    </Exp>
+    <Exp title="Why the scale asks about supervision needed, not provided">
+      <p style={{ margin: 0 }}>Supervision is baked into training. A supervisor might provide more oversight than you strictly needed — regulatory requirements, teaching opportunities, their relationship with a patient. Asking about what was needed rather than what was delivered gets at what actually matters: your readiness. This is harder for faculty (it requires judgment rather than just reporting what happened), but it produces more useful data for you and your CCC.</p>
+    </Exp>
+    <Exp title="Why forms are standardized but implementation is flexible">
+      <p style={{ margin: 0 }}>Standardizing form content ensures every program's data is aligned with the same framework and can be aggregated for learning across programs. But programs vary enormously in size, structure, and culture, so implementation (who initiates forms, frequency expectations, rollout approach) is flexible. Standardized content protects you by ensuring what is assessed is evidence-informed and purpose-aligned. Flexible implementation protects programs by letting them adapt to local context.</p>
+    </Exp>
+    <Exp title="Why the scale is retrospective rather than prospective">
+      <p style={{ margin: 0 }}>Ideally, an assessor would tell you what supervision you would need in future practice. That works in continuity clinic, where your preceptor knows the general pediatrics environment. But much of training happens on subspecialty rotations — a pediatric oncologist supervising you on the wards may struggle to project what you would need in a general pediatrics office. A retrospective question ("how much supervision did you need during this encounter?") is easier for faculty across all settings. Your CCC then translates the aggregate data into prospective judgments about readiness — a task better suited to a committee reviewing the full picture than to a single assessor in the moment.</p>
+    </Exp>
+  </>;
+}
+
+function TabDashboard() {
+  return <>
+    <SH title="Your Dashboard & Your Data" sub="Understanding What You See" />
+    <p style={ps}>You can see your individual assessment data directly in the app as it comes in. The dashboard takes that same data and organizes and displays it to elucidate patterns: how your supervision ratings are trending over time, where you have more or less data across EPAs, and what the overall picture looks like. Together, the raw assessments and the dashboard make you a partner in tracking your growth.</p>
+    <p style={ps}>The dashboard has two components: your assessment volume and your assessment data and patterns.</p>
+
+    <H3>Assessment Volume</H3>
+    <Exp title="More data means a more accurate picture." open={true}>
+      <p style={{ margin: 0 }}>We do not yet know how many assessments per EPA are needed for defensible and equitable CCC decisions. What we do know: more assessments = more accurate picture. Each one is low-stakes, one small piece of a much bigger puzzle.</p>
+    </Exp>
+    <Exp title="Initiating works, even when it feels like it doesn't.">
+      <p style={{ margin: 0 }}>If you push assessments to faculty, the data show the more you initiate, the more you receive. More pushes also mean more that go uncompleted. The completed ones add up.</p>
+    </Exp>
+    <Exp title="Give each other grace.">
+      <p style={{ margin: 0 }}>Faculty are learning new tools at the same time you are. Give each other grace as we figure this out together.</p>
+    </Exp>
+
+    <H3>Assessment Data & Patterns</H3>
+    <Exp title="Look for patterns, not snapshots.">
+      <p style={{ margin: 0 }}>The graphs show patterns over time. Look for growth and notice plateaus. A plateau might reflect a data gap or an invitation to reflect: do the narrative comments help me build an action plan?</p>
+    </Exp>
+    <Exp title="Don't rely on averages.">
+      <p style={{ margin: 0 }}>Neither you nor your CCC should rely on averages alone. Each <Tip def="A retrospective judgment about how much supervision you needed for one encounter. Different from how much was provided, and different from what you'd need in future practice.">supervision rating</Tip> reflects one judgment about one encounter. Ratings, narrative, context, sources, and patterns should be interpreted together.</p>
+    </Exp>
+    <Exp title="Your narrative comments are your richest source of feedback.">
+      <p style={{ margin: "0 0 10px" }}>Developmental feedback often does not look like a labeled deficiency. Most of the time, it is normal growth.</p>
+      <ExBox>
+        <span>A faculty member might write: <em style={{ color: C.text }}>"The intern formulated the entire plan and communicated it effectively... the only thing the senior resident helped with was determining discharge readiness and oral antibiotic choice."</em></span>
+        <div style={{ marginTop: 8, fontWeight: 600, color: C.text }}>This includes real growth areas in medical decision-making. Because it is not labeled as a deficiency, you might not see it as constructive feedback. It is.</div>
+      </ExBox>
+    </Exp>
+    <Exp title="Use your narratives to build learning and growth plans.">
+      <p style={{ margin: "0 0 10px" }}>The narrative comments within your EPA-based forms and narrative-only forms are not just feedback to read once and move on from. They are the raw material for your learning and growth plans. At the level of an individual assessment, a comment can point you toward something specific to work on in your next encounter. But the real power comes from looking across your comments over time and noticing patterns: are multiple faculty noting the same area for growth? Is something that used to come up no longer appearing? Are there themes in what you do well that you can build on?</p>
+      <p style={{ margin: 0 }}>Use these patterns in conversation with your faculty coach to set concrete learning goals and build your individualized learning plan. The narrative data is there to serve your development, not just to document it.</p>
+    </Exp>
+    <Exp title="Faculty are still learning the scales.">
+      <p style={{ margin: 0 }}>Ratings may not always align with narratives. More assessments = individual inconsistencies matter less and the overall pattern becomes clearer.</p>
+    </Exp>
+    <Callout type="green">Coming soon: visibility into your incomplete assessments so you can follow up when needed.</Callout>
+  </>;
+}
+
+function TabDataUse() {
+  return <>
+    <SH title="How Your Data Is Used" sub="From Frontline Assessment to CCC Decisions" />
+    <Exp title="How your CCC reviews data" open={true}>
+      <p style={{ margin: "0 0 10px" }}>Your <Tip def="A group of faculty and educators responsible for monitoring your progress and making decisions about your supervision needs across all EPAs.">Clinical Competency Committee (CCC)</Tip> reviews and synthesizes aggregate assessment data: supervision ratings, narrative comments, clinical context, and patterns over time.</p>
+      <p style={{ margin: "0 0 10px" }}><strong>Frontline ratings are retrospective:</strong> a supervisor reflects on how much supervision you needed for one past encounter.</p>
+      <p style={{ margin: 0 }}><strong>CCC decisions are prospective:</strong> the committee asks, "Could this trainee, practicing today without supervision, provide safe and effective care for this activity?"</p>
+    </Exp>
+
+    <Exp title="The CCC Level of Supervision Scale">
+      <p style={{ margin: "0 0 12px" }}>Your CCC uses its own scale (aligned with but distinct from the SIMPL frontline scale) to make summative decisions. When a CCC assigns Level 5, you are practice ready for that EPA.</p>
+      <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+        {CCC_SCALE.map(s => (
+          <div key={s.level} style={{ display: "flex", gap: 10, alignItems: "flex-start", padding: "8px 0" }}>
+            <div style={{ width: 28, height: 28, borderRadius: 7, background: C.amberSub, color: C.amber, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: serif, fontWeight: 700, fontSize: 13, flexShrink: 0 }}>{s.level}</div>
+            <div><span style={{ fontFamily: serif, fontWeight: 700, fontSize: 13.5, color: C.text }}>{s.title}: </span><span style={{ fontFamily: sans, fontSize: 13, color: C.text2 }}>{s.desc}</span></div>
+          </div>
+        ))}
+      </div>
+    </Exp>
+    <Exp title="No single data point carries too much weight.">
+      <p style={{ margin: 0 }}>With many data points from diverse faculty across settings and time, no single assessment should significantly influence a CCC determination.</p>
+    </Exp>
+    <Exp title="The role of professional judgment">
+      <p style={{ margin: 0 }}>CCCs must exercise professional judgment to determine when data are sufficient and when more information is needed.</p>
+    </Exp>
+
+    <H3>Current State: Practicing for 2028</H3>
+    <Exp title="Your current EPA assignments are developmental, not final.">
+      <p style={{ margin: "0 0 8px" }}>They are not reported to the ABP. They are likely to have some error. They are intended to practice the decision-making that becomes consequential in 2028.</p>
+      <p style={{ margin: 0 }}>Please provide feedback, but know they carry no stakes currently.</p>
+    </Exp>
+  </>;
+}
+
+function TabChallenges() {
+  return <>
+    <SH title="The Honest Challenges" sub="What We Want You to Know" />
+    <p style={ps}>Everyone is learning simultaneously: residents, faculty, program leaders, CCC members, and platform developers. We call this "mutual inexperience," and it is a predictable feature of implementation, not a failure. But we are not starting from zero, and we are not building this alone.</p>
+
+    <H3>We Are Not Building from Scratch</H3>
+    <Exp title="We have the benefit of learning from others." open={true}>
+      <p style={{ margin: 0 }}>Pediatrics is not the first specialty to do this. We have the benefit of learning from other specialties and countries that have implemented similar systems — their successes, their failures, and the lessons they learned along the way. This platform was built in partnership with SIMPL, which developed similar tools for surgery and emergency medicine, and informed by implementation experiences across international contexts. We are applying those lessons, not repeating those mistakes.</p>
+    </Exp>
+    <Exp title="We are building this together, within and between programs.">
+      <p style={{ margin: 0 }}>This is not a top-down system imposed on programs. It is being built collaboratively, with input from over 80 programs that share what is working, what is not, and what they have learned. Programs learn from each other, and the collective experience strengthens the system for everyone. Your program's experience feeds back into improvements that benefit all programs, and vice versa.</p>
+    </Exp>
+
+    <H3>We Are Constantly Improving</H3>
+    <Exp title="We have already made many changes based on feedback.">
+      <p style={{ margin: 0 }}>This platform is not static. Since launch, we have added new forms to address coverage gaps, retitled forms to improve usability, modified functionality based on user feedback, and refined the content based on what we have learned from data and from the people using the system every day. We will continue to do so. Learning and adapting through use is a foundational design principle, not an afterthought.</p>
+    </Exp>
+    <Exp title="Some improvements are easy; some are not.">
+      <p style={{ margin: 0 }}>We are constantly hearing perspectives from residents, faculty, and program leaders. Some suggestions can be implemented quickly. Others require significant technology development, resources, or coordination across many programs. We prioritize based on the potential impact for users, the resources required, and alignment with the system's purpose. If you have made a suggestion and have not yet seen it reflected, it does not mean it was not heard — it may be in the pipeline or may require technology advances that are actively being pursued.</p>
+    </Exp>
+    <Exp title="The technology continues to advance.">
+      <p style={{ margin: 0 }}>The platform's capabilities are growing as technology advances. The dashboards you see today are better than what was available six months ago, and they will continue to improve. Features like trainee-facing dashboards, incomplete assessment visibility, and enhanced data displays are examples of ongoing development. We are building toward the system we want, and it gets closer with each iteration.</p>
+    </Exp>
+
+    <Div />
+
+    <H3>The Real Challenges of Change</H3>
+    <Exp title="Culture change is the hardest part">
+      <p style={{ margin: 0 }}>The app and dashboards are the easy part. Shifting how faculty think about assessment and how residents think about feedback is the hard part. Vocal feedback skews negative; people who find the system useful operate quietly. If you find it valuable, saying so matters.</p>
+    </Exp>
+    <Exp title="Feedback looks different in this system">
+      <p style={{ margin: 0 }}>Traditional systems surfaced constructive feedback only when something was wrong. Here, it is woven into normal developmental observations. Look for growth opportunities even in strong assessments.</p>
+    </Exp>
+    <Exp title="It gets better with time">
+      <p style={{ margin: 0 }}>Pilot sites report the system gets meaningfully better. Technical issues resolve. Faculty get comfortable. You get comfortable. The first few months are the hardest.</p>
+    </Exp>
+    <Exp title="The tendency to glorify the old system">
+      <p style={{ margin: 0 }}>When something new is hard, it is natural to remember the old way fondly. But consider what it actually looked like: fewer than 10 total assessments per resident per year, completed weeks after encounters, based on general impressions and personality-based labels. Only 12% of residents at pilot sites report wanting to return to that system.</p>
+    </Exp>
+
+    <Callout>We need you in this. This system only works if residents are active partners: initiating assessments, reading feedback, using data, and telling us what is and is not working. Your feedback shapes what comes next.</Callout>
+  </>;
+}
+
+const TAB_MAP = { "why": TabWhy, "tool": TabTool, "dashboard": TabDashboard, "data-use": TabDataUse, "challenges": TabChallenges };
+
+function App() {
+  const [tab, setTab] = useState("why");
+  const contentRef = useRef(null);
+  const ActiveTab = TAB_MAP[tab];
+
+  const switchTab = (id) => {
+    setTab(id);
+    if (contentRef.current) contentRef.current.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  return (
+    <div style={{ background: C.bg, minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+      <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&family=Source+Serif+4:wght@400;600;700;800&display=swap" rel="stylesheet" />
+
+      <header style={{ background: C.surface, padding: "44px 20px 36px", textAlign: "center", borderBottom: "1px solid " + C.border, flexShrink: 0 }}>
+        <div style={{ display: "inline-block", fontSize: 10.5, letterSpacing: ".14em", textTransform: "uppercase", color: C.amber, fontFamily: sans, fontWeight: 700, background: C.amberSub, padding: "4px 14px", borderRadius: 20, marginBottom: 12 }}>ABP/SIMPL Assessment Platform</div>
+        <h1 style={{ fontFamily: serif, fontSize: 28, fontWeight: 800, color: C.text, margin: "0 0 8px", lineHeight: 1.2 }}>A Resident's Guide to Assessment & Practice Readiness</h1>
+        <p style={{ fontFamily: sans, fontSize: 15, color: C.text2, maxWidth: 480, margin: "0 auto", lineHeight: 1.55 }}>Everything you need to understand your assessment data, the system behind it, and what it means for your training.</p>
+      </header>
+
+      <nav style={{ background: C.surface, borderBottom: "1px solid " + C.border, display: "flex", overflowX: "auto", padding: "0 8px", flexShrink: 0, position: "sticky", top: 0, zIndex: 50, backdropFilter: "blur(14px)" }}>
+        {TABS.map(t => (
+          <button key={t.id} onClick={() => switchTab(t.id)} style={{ border: "none", background: "transparent", padding: "13px 16px", cursor: "pointer", fontFamily: sans, fontSize: 12.5, fontWeight: tab === t.id ? 700 : 500, color: tab === t.id ? C.amber : C.text2, borderBottom: tab === t.id ? "2.5px solid " + C.amber : "2.5px solid transparent", transition: "all .15s", whiteSpace: "nowrap" }}>
+            <span style={{ marginRight: 5 }}>{t.icon}</span>{t.label}
+          </button>
+        ))}
+      </nav>
+
+      <div ref={contentRef} style={{ flex: 1, overflowY: "auto" }}>
+        <div style={{ maxWidth: 660, margin: "0 auto", padding: "32px 20px 40px" }}>
+          <ActiveTab />
+
+          {/* FOOTER - always visible */}
+          <div style={{ marginTop: 40, background: C.surface, borderRadius: 12, border: "1px solid " + C.border, overflow: "hidden" }}>
+            <div style={{ padding: "18px 20px", borderBottom: "1px solid " + C.border }}>
+              <div style={{ display: "flex", alignItems: "flex-start", gap: 12 }}>
+                <div style={{ width: 32, height: 32, borderRadius: 9, background: C.tint, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, fontSize: 14 }}>{"🤝"}</div>
+                <div>
+                  <div style={{ fontFamily: serif, fontWeight: 700, fontSize: 14, color: C.text, marginBottom: 3 }}>Concerns about your assessments or the implementation?</div>
+                  <div style={{ fontFamily: sans, fontSize: 13, color: C.text2, lineHeight: 1.6 }}>Please reach out to a trusted member of your program. We want you to share your concerns because your voice helps us create stronger and more equitable systems.</div>
+                </div>
+              </div>
+            </div>
+            <div style={{ padding: "18px 20px" }}>
+              <div style={{ display: "flex", alignItems: "flex-start", gap: 12 }}>
+                <div style={{ width: 32, height: 32, borderRadius: 9, background: C.tint, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, fontSize: 14 }}>{"💡"}</div>
+                <div>
+                  <div style={{ fontFamily: serif, fontWeight: 700, fontSize: 14, color: C.text, marginBottom: 3 }}>Questions about the platform, dashboard, or suggestions?</div>
+                  <div style={{ fontFamily: sans, fontSize: 13, color: C.text2, lineHeight: 1.6 }}>Reach out to the SIMPL team at <strong style={{ color: C.amber }}>[simpl-support@email.com]</strong></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
+try {
+  const root = ReactDOM.createRoot(document.getElementById("root"));
+  root.render(React.createElement(App));
+} catch(e) { document.getElementById("root").innerHTML = "<pre style=\"color:red\">" + e.message + "\n" + e.stack + "</pre>"; }
+</script>
+</body>
+</html>
