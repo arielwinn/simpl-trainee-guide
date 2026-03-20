@@ -131,11 +131,21 @@ function TabWhy() {
     <SH title="Why This System Exists" sub="The Goals Behind the Change" />
     <p style={ps}>This assessment system was not created to add more tasks to your day. It was created because the old approach to evaluating residents was not good enough to serve patients, to serve you, or to serve the profession. This system is built around five goals:</p>
 
-    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))", gap: 10, margin: "8px 0 24px" }}>
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10, margin: "8px 0 6px" }}>
       {[
         { icon: "❤️", t: "Center patients", d: "Ensure graduates can meet the needs of the children they serve" },
         { icon: "🎓", t: "Center learners", d: "Give you transparency, agency, and feedback that drives growth" },
         { icon: "📈", t: "Improve the data", d: "Replace gestalt impressions with frequent, specific, observed evidence" },
+      ].map((g, i) => (
+        <div key={i} style={{ background: C.surface, border: "1px solid " + C.border, borderRadius: 12, padding: "14px 12px", textAlign: "center" }}>
+          <div style={{ fontSize: 22, marginBottom: 6 }}>{g.icon}</div>
+          <div style={{ fontFamily: serif, fontSize: 13.5, fontWeight: 700, color: C.text, marginBottom: 4, lineHeight: 1.3 }}>{g.t}</div>
+          <div style={{ fontFamily: sans, fontSize: 11.5, color: C.text2, lineHeight: 1.5 }}>{g.d}</div>
+        </div>
+      ))}
+    </div>
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 10, margin: "0 0 24px" }}>
+      {[
         { icon: "⚖️", t: "Improve equity", d: "Build structures that promote fairness and mitigate bias" },
         { icon: "🔄", t: "Assessment & growth", d: "One system that serves both learning and high-stakes decisions" },
       ].map((g, i) => (
@@ -151,7 +161,7 @@ function TabWhy() {
     <p style={ps}>Traditional assessment systems evaluate residents on broad domains of competence like "medical knowledge" or "professionalism." These are important, but they do not directly answer the question that matters most: can this person actually do the work of a pediatrician?</p>
     <p style={ps}><Tip def="Entrustable Professional Activities are the essential tasks that define what a pediatrician does. Each represents a unit of clinical work that can be observed, assessed, and — when a trainee is ready — entrusted to them without supervision.">Entrustable Professional Activities (EPAs)</Tip> were created to answer that question. Each EPA defines an essential activity of practice — something a general pediatrician actually does — that can be directly observed, assessed, and ultimately entrusted to you. Instead of asking "does this resident have enough medical knowledge?", the system asks "can this resident manage an acutely ill child?" or "can this resident provide a well-child visit?" The 12 General Pediatrics EPAs together define the scope of what it means to practice as a general pediatrician. Tap any below to learn more.</p>
 
-    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(190px, 1fr))", gap: 10, margin: "12px 0 20px" }}>
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10, margin: "12px 0 20px" }}>
       {EPAS.map(e => (
         <button key={e.n} onClick={() => setSelEpa(selEpa === e.n ? null : e.n)}
           style={{ background: selEpa === e.n ? C.amberSub : C.surface, border: "1px solid " + (selEpa === e.n ? C.amber : C.border), borderRadius: 10, padding: "12px 14px", cursor: "pointer", textAlign: "left", transition: "all .15s" }}>
@@ -200,7 +210,7 @@ function TabTool() {
     <p style={ps}>You may be familiar with end-of-rotation evaluations: a faculty member completes a form days or weeks after a rotation ends, summarizing their overall impressions of your performance across the entire block. These evaluations are often based on general recall rather than specific observed encounters, and they tend to produce vague feedback ("good fund of knowledge," "works well with the team") that is difficult to act on.</p>
     <p style={ps}>The ABP/SIMPL platform takes a fundamentally different approach called <Tip def="Assessment tied to specific clinical encounters in real practice environments, completed close to the time of the encounter. Captures what actually happened rather than general impressions recalled later.">workplace-based assessment (WBA)</Tip>. Instead of one summary at the end of a rotation, faculty complete brief assessments tied to specific clinical encounters, close to the time they happen. Each assessment captures what you actually did, in a real clinical situation, as observed by the supervisor who was there. This produces feedback that is specific, timely, and actionable — and generates data that accumulates into a much richer picture of your development.</p>
 
-    <div style={{ display: "flex", gap: 12, margin: "16px 0 24px" }}>
+    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, margin: "16px 0 24px" }}>
       {[{ t: "End-of-Rotation", items: ["One form per rotation", "Completed days/weeks later", "Based on general impressions", "Vague, hard to act on", "~10 per resident per year"], bad: true },
         { t: "Workplace-Based (SIMPL)", items: ["Many forms per rotation", "Completed within 4 days", "Tied to specific encounters", "Specific, actionable feedback", "Many more data points per year"], bad: false }
       ].map((col, i) => (
