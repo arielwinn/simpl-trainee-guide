@@ -406,63 +406,30 @@ function TabChallenges() {
 
 /* ===== CHATBOT ===== */
 
-const KB = [
-  { keys: ["why", "why are we doing this", "purpose", "point", "reason", "what is this", "what is simpl"], tab: "why", answer: "This system exists because the old approach to evaluating residents — vague end-of-rotation forms based on general impressions — wasn't good enough to serve patients, you, or the profession. It's built around 5 goals: centering patients, centering learners, improving data quality, improving equity, and making one system that serves both learning and high-stakes decisions. See 'The Why' tab for the full picture." },
-  { keys: ["epa", "entrustable", "professional activity", "activities", "what are epas", "12 epas"], tab: "why", answer: "EPAs (Entrustable Professional Activities) are the 12 essential tasks that define what a general pediatrician does. Instead of evaluating broad domains like 'medical knowledge,' EPAs ask: can this resident actually do a specific clinical activity? The 12 EPAs cover everything from preventive care (EPA 1) to leading interprofessional teams (EPA 10). Tap 'The Why' tab and scroll to 'What Are EPAs?' to see all 12 with descriptions." },
-  { keys: ["practice ready", "graduation", "ready to practice", "what does practice ready mean", "graduate"], tab: "why", answer: "Practice ready means you can provide safe and effective care without assigned supervision, in the context of a collaborative practice environment. It's the foundation, not mastery. Think of it like a driver's license: you can drive alone, but you still use GPS and ask for directions. The 'The Why' tab has a full section on this." },
-  { keys: ["2028", "certification", "abp", "board", "attest"], tab: "why", answer: "Starting in 2028, the ABP will require program directors to attest that graduates are practice ready across all EPAs before initial board certification. This replaces the current 'satisfactory' attestation. Current EPA assignments are developmental and carry no stakes — they're practicing the process. See 'The Why' tab for details." },
-  { keys: ["scale", "supervision scale", "1 2 3 4 5", "levels", "rating", "score", "ratings"], tab: "tool", answer: "The SIMPL Supervision Scale has 5 levels: 1 (Supervisor performed), 2 (Supervisor led), 3 (Co-led), 4 (Resident led, minimal supervision), 5 (Resident led, no supervision needed). Each rating reflects how much supervision you NEEDED for that encounter (not how much was provided). See 'The Platform' tab to explore each level." },
-  { keys: ["form", "forms", "assessment type", "types of forms", "epa form", "narrative", "ksa"], tab: "tool", answer: "There are 3 types of forms: (1) EPA-Based Forms — the core assessment, tied to specific encounters with supervision ratings and narratives; (2) Narrative-Only Forms (KSAs) — written feedback on cross-cutting skills like communication and professionalism, no rating; (3) Longitudinal Continuity Clinic Assessment — your continuity preceptor's observations over time. See 'The Platform' tab." },
-  { keys: ["workplace", "wba", "workplace-based", "different from rotation", "end of rotation", "old system"], tab: "tool", answer: "Unlike end-of-rotation evaluations (one vague form weeks later), workplace-based assessment captures specific encounters close to when they happen. More data points, more specific feedback, more actionable. The 'The Platform' tab has a side-by-side comparison." },
-  { keys: ["dashboard", "my data", "graph", "trend", "pattern", "see my"], tab: "dashboard", answer: "Your dashboard shows assessment volume across EPAs and supervision rating trends over time. Key advice: look for patterns (not single data points), don't rely on averages alone, and use narrative comments as your richest feedback source. See 'Your Dashboard & Data' for the full breakdown." },
-  { keys: ["narrative", "comment", "feedback", "written", "constructive"], tab: "dashboard", answer: "Narrative comments are your richest source of feedback. Developmental feedback often doesn't look like a labeled deficiency — growth areas are woven into normal observations. Use patterns across comments to build learning goals with your faculty coach. See 'Your Dashboard & Data' tab." },
-  { keys: ["initiate", "push", "request", "get more", "how to get", "more assessments"], tab: "dashboard", answer: "The more you initiate (push) assessments to faculty, the more you receive — even though more also go uncompleted. The completed ones add up. Give faculty grace as they learn the tools too. See 'Your Dashboard & Data' tab." },
-  { keys: ["what happens to my data", "what happens to data", "where does my data go", "who sees my data", "data used"], tab: "data-use", answer: "Your assessment data is reviewed by your Clinical Competency Committee (CCC), which synthesizes ratings, narratives, context, and patterns over time. No single data point carries too much weight. Currently, EPA assignments are developmental and NOT reported to the ABP. Starting in 2028, your CCC will use this data to determine if you're practice ready. See 'How Data Is Used' tab for the full process." },
-  { keys: ["ccc", "clinical competency committee", "committee", "how decisions", "summative"], tab: "data-use", answer: "Your Clinical Competency Committee (CCC) reviews aggregate data — ratings, narratives, context, and patterns over time. Frontline ratings are retrospective (one past encounter), but CCC decisions are prospective: 'Could this trainee practice safely without supervision today?' The CCC has its own 5-level scale. See 'How Data Is Used' tab." },
-  { keys: ["ccc scale", "ccc levels", "committee scale", "level 5 ccc"], tab: "data-use", answer: "The CCC uses its own scale: Level 1 (Observation only), Level 2 (Performs with supervisor present), Level 3 (Performs with supervisor available), Level 4 (Limited support, NOT yet practice ready), Level 5 (Practice ready — no supervisor required). When your CCC assigns Level 5, you're practice ready for that EPA. See 'How Data Is Used' tab." },
-  { keys: ["current", "developmental", "stakes", "no stakes", "right now"], tab: "data-use", answer: "Current EPA assignments are developmental, not final. They are NOT reported to the ABP, may have some error, and carry no stakes. They're practicing the decision-making that becomes consequential in 2028. See 'How Data Is Used' tab." },
-  { keys: ["culture", "change", "hard", "challenge", "difficult", "frustrat"], tab: "challenges", answer: "Culture change is the hardest part — shifting how faculty think about assessment and how residents think about feedback. It gets better with time. Pilot sites report meaningful improvement as everyone gets comfortable. Only 12% of residents at pilot sites want to return to the old system. See 'Honest Challenges' tab." },
-  { keys: ["bias", "equity", "fair", "equitable"], tab: "why", answer: "One of the 5 core goals is improving equity — building structures that promote fairness and mitigate bias. EPA 11 specifically addresses health equity. The system uses multiple data points from diverse faculty to reduce the impact of any single biased assessment. See 'The Why' tab." },
-  { keys: ["procedure", "epa 9"], tab: "why", answer: "EPA 9 covers procedures a general pediatrician would perform in practice — not subspecialty procedures. Forms: Procedure (ED, Inpatient, NICU/PICU, Primary Care). See the EPA cards in 'The Why' tab." },
-  { keys: ["handover", "handoff", "transition", "epa 8", "sign out"], tab: "why", answer: "EPA 8 covers clinical handovers — safe, effective transitions of care including admissions, discharges, transfers, and shift changes. Forms: Handover (ED, Inpatient, NICU/PICU). See the EPA cards in 'The Why' tab." },
-  { keys: ["sick", "severely ill", "decompensating", "epa 7", "emergency", "stabiliz"], tab: "why", answer: "EPA 7 covers recognizing the acutely decompensating child, initiating stabilization, and arranging disposition. It's about recognizing sick and acting — not ICU management. Forms: Immediate Intervention (ED), Decompensating Patient (NICU/PICU), Acute Care Transfer (Primary Care). See 'The Why' tab." },
-  { keys: ["coach", "learning plan", "growth plan", "individualized"], tab: "dashboard", answer: "Use patterns in your narrative comments to set concrete learning goals with your faculty coach and build your individualized learning plan. Look across comments over time for recurring themes. See 'Your Dashboard & Data' tab." },
-  { keys: ["retrospective", "prospective", "why retrospective"], tab: "tool", answer: "The frontline scale is retrospective (how much supervision was needed for THIS encounter) because a subspecialist supervising you may not know what you'd need in general pediatrics practice. Your CCC then translates aggregate retrospective data into prospective judgments about readiness. See 'The Platform' tab." },
-  { keys: ["who", "contact", "help", "support", "question", "concern", "email"], tab: null, answer: "For concerns about assessments or implementation, reach out to a trusted member of your program. For platform/dashboard questions or suggestions, contact the SIMPL team at simpl-support@email.com." },
-  { keys: ["improving", "feedback on system", "suggestion", "not working"], tab: "challenges", answer: "The platform is constantly improving based on feedback. Many changes have already been made — new forms, retitled forms, modified functionality. Some improvements are quick; others require significant development. If your suggestion hasn't appeared yet, it may be in the pipeline. See 'Honest Challenges' tab." },
-  { keys: ["how many", "volume", "enough", "how often", "frequency", "number of assessments"], tab: "dashboard", answer: "We don't yet know exactly how many assessments per EPA are needed for defensible CCC decisions. What we do know: more assessments = more accurate picture. Each one is low-stakes, just one piece of a bigger puzzle. The more you initiate, the more you receive. See 'Your Dashboard & Data' tab." },
+const FAQ = [
+  { q: "Why are we doing this?", short: "The old system — vague end-of-rotation forms based on general impressions — wasn't good enough. This new approach uses specific, encounter-based assessments tied to 12 EPAs so you get real feedback on real clinical work.", tab: "why" },
+  { q: "What are EPAs?", short: "EPAs (Entrustable Professional Activities) are the 12 essential tasks that define what a general pediatrician does — from preventive care to managing acutely ill children. Each one represents a real clinical activity, not a vague domain.", tab: "why" },
+  { q: "What does the supervision scale mean?", short: "The 5-level scale measures how much supervision you NEEDED (not received): 1 = supervisor did it, 2 = supervisor led, 3 = co-led, 4 = you led with minimal help, 5 = you led independently.", tab: "tool" },
+  { q: "What happens to my data?", short: "Your Clinical Competency Committee (CCC) reviews your ratings, narratives, and patterns over time. No single data point carries too much weight. Currently, EPA assignments are developmental and NOT reported to the ABP.", tab: "data-use" },
+  { q: "How do I use the dashboard?", short: "Your dashboard shows assessment volume by EPA and supervision trends over time. Focus on patterns (not single ratings), read your narrative comments carefully, and use themes to build learning goals with your faculty coach.", tab: "dashboard" },
+  { q: "What does 'practice ready' mean?", short: "It means you can provide safe, effective care without assigned supervision, in a collaborative practice setting. Think of it like a driver's license — you can drive alone, but you still use GPS and ask for directions.", tab: "why" },
+  { q: "What types of assessment forms are there?", short: "Three types: (1) EPA-Based Forms — encounter-specific with supervision ratings; (2) Narrative-Only Forms (KSAs) — written feedback on communication, professionalism, etc.; (3) Longitudinal Continuity Clinic Assessment — your preceptor's observations over time.", tab: "tool" },
+  { q: "How is this different from old evaluations?", short: "Old system: one vague form per rotation, completed weeks later based on general impressions. New system: multiple encounter-based assessments, completed close to the event, with specific feedback tied to real clinical activities.", tab: "tool" },
+  { q: "What does the CCC do with my data?", short: "Your CCC translates your aggregate frontline data into prospective judgments: 'Could this resident practice safely without supervision today?' They use their own 5-level scale, weighing patterns over time — not single data points.", tab: "data-use" },
+  { q: "Do current EPA assignments count?", short: "No — current EPA assignments are developmental. They are NOT reported to the ABP, may have some error, and carry no stakes. Your program is practicing the process that becomes consequential in 2028.", tab: "data-use" },
+  { q: "How do I get more assessments?", short: "Initiate (push) assessments to faculty after clinical encounters. The more you push, the more you receive — even though some go uncompleted. Give faculty grace as they learn the tools too.", tab: "dashboard" },
+  { q: "Why is change so hard?", short: "Culture change is the hardest part. But it gets better with time — pilot sites report meaningful improvement, and only 12% of residents at pilot sites want to return to the old system.", tab: "challenges" },
+  { q: "Who do I contact for help?", short: "For assessment or implementation concerns, reach out to a trusted member of your program. For platform/dashboard questions or suggestions, contact the SIMPL team at simpl-support@email.com.", tab: null },
 ];
 
-const GREETING = "Hi! I can help you find information in this guide. Try asking about EPAs, the supervision scale, your dashboard, the CCC process, or anything else about the assessment system.";
+const GREETING = "Hi! I can help you navigate this guide. Tap any question below, or type your own.";
 const DISCLAIMER = "I'm still learning, so please don't trust my output completely — always check the relevant section of the guide to confirm.";
-const SUGGESTED = ["Why are we doing this?", "What happens to my data?", "How do I use the dashboard?", "What does the scale mean?", "What are EPAs?", "Who do I contact for help?"];
-
-function matchQuestion(q) {
-  const lower = q.toLowerCase().replace(/[?!.,'"]/g, "");
-  const words = lower.split(/\s+/);
-  let best = null, bestScore = 0;
-  for (const entry of KB) {
-    let score = 0;
-    for (const key of entry.keys) {
-      if (lower.includes(key)) {
-        score += key.split(/\s+/).length * 2;
-      } else {
-        const keyWords = key.split(/\s+/);
-        for (const kw of keyWords) {
-          if (words.some(w => w.includes(kw) || kw.includes(w))) score += 0.5;
-        }
-      }
-    }
-    if (score > bestScore) { bestScore = score; best = entry; }
-  }
-  return bestScore >= 1 ? best : null;
-}
 
 function Chatbot({ onNavigate }) {
   const [open, setOpen] = useState(true);
   const [messages, setMessages] = useState([{ from: "bot", text: GREETING, disclaimer: false }]);
   const [input, setInput] = useState("");
-  const [showSuggested, setShowSuggested] = useState(true);
+  const [showFAQ, setShowFAQ] = useState(true);
   const bottomRef = useRef(null);
   const inputRef = useRef(null);
 
@@ -474,21 +441,44 @@ function Chatbot({ onNavigate }) {
     if (open && inputRef.current) inputRef.current.focus();
   }, [open]);
 
-  const ask = useCallback((q) => {
-    if (!q.trim()) return;
-    setShowSuggested(false);
-    const userMsg = { from: "user", text: q.trim() };
-    const match = matchQuestion(q);
-    let botMsg;
-    if (match) {
-      const tabLabel = match.tab ? TABS.find(t => t.id === match.tab) : null;
-      botMsg = { from: "bot", text: match.answer, tab: match.tab, tabLabel: tabLabel ? tabLabel.label : null, disclaimer: true };
-    } else {
-      botMsg = { from: "bot", text: "I'm not sure about that one. Try asking about EPAs, the supervision scale, your dashboard, how the CCC uses your data, or what practice ready means. You can also browse the tabs above to explore the full guide.", disclaimer: true };
-    }
+  const answerFAQ = useCallback((faq) => {
+    const userMsg = { from: "user", text: faq.q };
+    const tabLabel = faq.tab ? TABS.find(t => t.id === faq.tab) : null;
+    const botMsg = { from: "bot", text: faq.short, tab: faq.tab, tabLabel: tabLabel ? tabLabel.label : null, disclaimer: true, showMore: true };
     setMessages(prev => [...prev, userMsg, botMsg]);
+    setShowFAQ(false);
     setInput("");
   }, []);
+
+  const handleFreeText = useCallback((q) => {
+    if (!q.trim()) return;
+    const lower = q.trim().toLowerCase().replace(/[?!.,'"]/g, "");
+    // Try to find a close match among FAQ questions
+    let best = null, bestScore = 0;
+    for (const faq of FAQ) {
+      const faqLower = faq.q.toLowerCase().replace(/[?!.,'"]/g, "");
+      // Exact match
+      if (lower === faqLower) { best = faq; break; }
+      // Check how many words from the user's input appear in the FAQ question
+      const userWords = lower.split(/\s+/).filter(w => w.length > 2);
+      const faqWords = faqLower.split(/\s+/);
+      let matches = 0;
+      for (const uw of userWords) {
+        if (faqWords.some(fw => fw.includes(uw) || uw.includes(fw))) matches++;
+      }
+      const score = userWords.length > 0 ? matches / userWords.length : 0;
+      if (score > bestScore && score >= 0.5) { bestScore = score; best = faq; }
+    }
+    if (best) {
+      answerFAQ(best);
+    } else {
+      const userMsg = { from: "user", text: q.trim() };
+      const botMsg = { from: "bot", text: "I don't have a specific answer for that, but one of these questions might help:", disclaimer: true, showFAQInline: true };
+      setMessages(prev => [...prev, userMsg, botMsg]);
+      setShowFAQ(false);
+      setInput("");
+    }
+  }, [answerFAQ]);
 
   const chatBtnStyle = {
     position: "fixed", bottom: 20, right: 20, borderRadius: 30,
@@ -504,6 +494,11 @@ function Chatbot({ onNavigate }) {
     border: "1px solid " + C.border, boxShadow: "0 12px 40px rgba(0,0,0,.15)", zIndex: 1000,
     display: "flex", flexDirection: "column", overflow: "hidden",
   };
+  const faqBtnStyle = {
+    background: C.amberSub, border: "1px solid " + C.border, borderRadius: 10, padding: "8px 12px",
+    fontFamily: sans, fontSize: 12, color: C.amber, fontWeight: 600, cursor: "pointer",
+    textAlign: "left", lineHeight: 1.4, width: "100%",
+  };
 
   return <>
     {open && <div style={panelStyle}>
@@ -511,7 +506,7 @@ function Chatbot({ onNavigate }) {
         <div style={{ width: 28, height: 28, borderRadius: 14, background: C.amberSub, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14 }}>{"💬"}</div>
         <div style={{ flex: 1 }}>
           <div style={{ fontFamily: serif, fontWeight: 700, fontSize: 14, color: C.text }}>Guide Assistant</div>
-          <div style={{ fontFamily: sans, fontSize: 10.5, color: C.text2 }}>Ask me anything about the assessment system</div>
+          <div style={{ fontFamily: sans, fontSize: 10.5, color: C.text2 }}>Tap a question or type your own</div>
         </div>
         <button onClick={() => setOpen(false)} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 18, color: C.text2, padding: 4 }}>{"✕"}</button>
       </div>
@@ -528,27 +523,32 @@ function Chatbot({ onNavigate }) {
                 display: "block", marginTop: 8, background: C.amberSub, border: "1px solid " + C.accent,
                 borderRadius: 8, padding: "6px 12px", cursor: "pointer", fontFamily: sans, fontSize: 12,
                 fontWeight: 600, color: C.amber,
-              }}>{"Go to: " + m.tabLabel + " →"}</button>}
+              }}>{"Read more: " + m.tabLabel + " →"}</button>}
+              {m.showFAQInline && <div style={{ display: "flex", flexDirection: "column", gap: 4, marginTop: 8 }}>
+                {FAQ.slice(0, 6).map((faq, j) => (
+                  <button key={j} onClick={() => answerFAQ(faq)} style={{
+                    background: "#fff", border: "1px solid " + C.border, borderRadius: 8, padding: "6px 10px",
+                    fontFamily: sans, fontSize: 11.5, color: C.amber, fontWeight: 600, cursor: "pointer", textAlign: "left",
+                  }}>{faq.q}</button>
+                ))}
+              </div>}
             </div>
             {m.disclaimer && <div style={{ fontFamily: sans, fontSize: 10.5, color: C.text2, marginTop: 4, fontStyle: "italic", paddingLeft: 4 }}>{DISCLAIMER}</div>}
           </div>
         ))}
-        {showSuggested && <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 4 }}>
-          {SUGGESTED.map((s, i) => (
-            <button key={i} onClick={() => ask(s)} style={{
-              background: C.amberSub, border: "1px solid " + C.border, borderRadius: 20, padding: "6px 12px",
-              fontFamily: sans, fontSize: 11.5, color: C.amber, fontWeight: 600, cursor: "pointer",
-            }}>{s}</button>
+        {showFAQ && <div style={{ display: "flex", flexDirection: "column", gap: 5, marginTop: 4 }}>
+          {FAQ.map((faq, i) => (
+            <button key={i} onClick={() => answerFAQ(faq)} style={faqBtnStyle}>{faq.q}</button>
           ))}
         </div>}
         <div ref={bottomRef} />
       </div>
       <div style={{ padding: "10px 12px", borderTop: "1px solid " + C.border, display: "flex", gap: 8 }}>
         <input ref={inputRef} value={input} onChange={e => setInput(e.target.value)}
-          onKeyDown={e => { if (e.key === "Enter") ask(input); }}
-          placeholder="Ask a question..."
+          onKeyDown={e => { if (e.key === "Enter") handleFreeText(input); }}
+          placeholder="Type a question..."
           style={{ flex: 1, border: "1px solid " + C.border, borderRadius: 10, padding: "9px 14px", fontFamily: sans, fontSize: 13, outline: "none", background: C.tint }} />
-        <button onClick={() => ask(input)} style={{
+        <button onClick={() => handleFreeText(input)} style={{
           background: C.amber, color: "#fff", border: "none", borderRadius: 10, padding: "0 16px",
           cursor: "pointer", fontFamily: sans, fontWeight: 600, fontSize: 13,
         }}>Send</button>
