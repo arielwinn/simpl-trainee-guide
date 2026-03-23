@@ -153,31 +153,22 @@ function App() {
           <h1 style={{ fontFamily: serif, fontSize: 36, fontWeight: 800, color: C.text, margin: "0 0 12px", lineHeight: 1.15 }}>You Have Access to Your Assessment Dashboard</h1>
           <p style={{ fontFamily: sans, fontSize: 18, color: C.text2, maxWidth: 600, margin: "0 auto 32px", lineHeight: 1.6 }}>Here's how to get started and what to know when using it.</p>
 
-          {/* ACTION CARDS */}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16, textAlign: "left", maxWidth: 900, margin: "0 auto 16px" }}>
-            <a href="#" style={{ background: C.amberSub, border: "1.5px solid " + C.accent, borderRadius: 14, padding: "24px 22px", textDecoration: "none", transition: "transform .15s, box-shadow .15s", display: "block" }}
-              onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 6px 20px rgba(154,123,44,.15)"; }}
-              onMouseLeave={e => { e.currentTarget.style.transform = "none"; e.currentTarget.style.boxShadow = "none"; }}>
-              <div style={{ fontSize: 28, marginBottom: 10 }}>{"\u{1F3AC}"}</div>
-              <div style={{ fontFamily: serif, fontSize: 18, fontWeight: 700, color: C.text, marginBottom: 6, lineHeight: 1.3 }}>Watch the Video</div>
-              <div style={{ fontFamily: sans, fontSize: 14.5, color: C.text2, lineHeight: 1.6 }}>A quick walkthrough of your dashboard and how to navigate it.</div>
-              <div style={{ fontFamily: sans, fontSize: 13, fontWeight: 700, color: C.amber, marginTop: 10 }}>Coming soon</div>
+          {/* QUICK LINKS */}
+          <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap", margin: "0 auto 16px" }}>
+            <a href="#" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: C.amberSub, border: "1.5px solid " + C.accent, borderRadius: 10, padding: "12px 20px", textDecoration: "none", fontFamily: sans, fontSize: 15, fontWeight: 600, color: C.amber, transition: "transform .15s" }}
+              onMouseEnter={e => e.currentTarget.style.transform = "translateY(-1px)"}
+              onMouseLeave={e => e.currentTarget.style.transform = "none"}>
+              {"\u{1F3AC}"} Watch the Video Walkthrough <span style={{ fontSize: 11, opacity: .6 }}>(coming soon)</span>
             </a>
-            <a href="#" style={{ background: C.surface, border: "1.5px solid " + C.border, borderRadius: 14, padding: "24px 22px", textDecoration: "none", transition: "transform .15s, box-shadow .15s", display: "block" }}
-              onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 6px 20px rgba(0,0,0,.08)"; }}
-              onMouseLeave={e => { e.currentTarget.style.transform = "none"; e.currentTarget.style.boxShadow = "none"; }}>
-              <div style={{ fontSize: 28, marginBottom: 10 }}>{"\u{1F4CA}"}</div>
-              <div style={{ fontFamily: serif, fontSize: 18, fontWeight: 700, color: C.text, marginBottom: 6, lineHeight: 1.3 }}>Open Your Dashboard</div>
-              <div style={{ fontFamily: sans, fontSize: 14.5, color: C.text2, lineHeight: 1.6 }}>Log in to see your assessment volume, supervision trends, and narrative feedback.</div>
-              <div style={{ fontFamily: sans, fontSize: 13, fontWeight: 700, color: C.amber, marginTop: 10 }}>Link coming {"\u2197"}</div>
+            <a href="#" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: C.surface, border: "1.5px solid " + C.border, borderRadius: 10, padding: "12px 20px", textDecoration: "none", fontFamily: sans, fontSize: 15, fontWeight: 600, color: C.text, transition: "transform .15s" }}
+              onMouseEnter={e => e.currentTarget.style.transform = "translateY(-1px)"}
+              onMouseLeave={e => e.currentTarget.style.transform = "none"}>
+              {"\u{1F4CA}"} Open Your Dashboard <span style={{ fontSize: 11, opacity: .6 }}>(link coming)</span>
             </a>
-            <a href="#" style={{ background: C.surface, border: "1.5px solid " + C.border, borderRadius: 14, padding: "24px 22px", textDecoration: "none", transition: "transform .15s, box-shadow .15s", display: "block" }}
-              onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 6px 20px rgba(0,0,0,.08)"; }}
-              onMouseLeave={e => { e.currentTarget.style.transform = "none"; e.currentTarget.style.boxShadow = "none"; }}>
-              <div style={{ fontSize: 28, marginBottom: 10 }}>{"\u{1F4DD}"}</div>
-              <div style={{ fontFamily: serif, fontSize: 18, fontWeight: 700, color: C.text, marginBottom: 6, lineHeight: 1.3 }}>Submit an Assessment</div>
-              <div style={{ fontFamily: sans, fontSize: 14.5, color: C.text2, lineHeight: 1.6 }}>Push an assessment to faculty after a clinical encounter.</div>
-              <div style={{ fontFamily: sans, fontSize: 13, fontWeight: 700, color: C.amber, marginTop: 10 }}>Link coming {"\u2197"}</div>
+            <a href="#" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: C.surface, border: "1.5px solid " + C.border, borderRadius: 10, padding: "12px 20px", textDecoration: "none", fontFamily: sans, fontSize: 15, fontWeight: 600, color: C.text, transition: "transform .15s" }}
+              onMouseEnter={e => e.currentTarget.style.transform = "translateY(-1px)"}
+              onMouseLeave={e => e.currentTarget.style.transform = "none"}>
+              {"\u{1F4DD}"} Submit an Assessment <span style={{ fontSize: 11, opacity: .6 }}>(link coming)</span>
             </a>
           </div>
         </div>
@@ -198,25 +189,56 @@ function App() {
         </div>
       </nav>
 
-      {/* ===== WHAT TO KNOW ===== */}
-      <section style={{ maxWidth: 960, margin: "0 auto", padding: "40px 32px 20px" }}>
-        <h2 style={{ fontFamily: serif, fontSize: 26, fontWeight: 700, color: C.text, margin: "0 0 6px" }}>What to Know</h2>
-        <div style={{ fontFamily: sans, fontSize: 13.5, color: C.amber, fontWeight: 600, letterSpacing: ".02em", marginBottom: 16 }}>Before you dive in</div>
+      {/* ===== THREE PURPOSES OF YOUR DASHBOARD ===== */}
+      <section style={{ maxWidth: 960, margin: "0 auto", padding: "44px 32px 20px" }}>
+        <h2 style={{ fontFamily: serif, fontSize: 26, fontWeight: 700, color: C.text, margin: "0 0 6px" }}>What Your Dashboard Does</h2>
+        <div style={{ fontFamily: sans, fontSize: 13.5, color: C.amber, fontWeight: 600, letterSpacing: ".02em", marginBottom: 20 }}>Three purposes, one tool</div>
 
-        <P>Your dashboard makes you a partner in tracking your own growth. It gives you a window into your assessment data and has two components: your <strong>assessment volume</strong> (how many assessments you have across EPAs) and your <strong>assessment data and patterns</strong> (supervision trends and narrative feedback over time).</P>
+        <P mb={24}>Your dashboard makes you a partner in tracking your own growth. It serves three purposes:</P>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 14, margin: "8px 0 24px" }}>
-          {[
-            { icon: "\u{2705}", text: "Each assessment is low-stakes \u2014 one small piece of a bigger puzzle" },
-            { icon: "\u{1F4AC}", text: "Narrative comments are your richest source of feedback" },
-            { icon: "\u{1F4C8}", text: "Focus on patterns over time, not any single data point" },
-            { icon: "\u{1F6E1}\u{FE0F}", text: "Current EPA assignments are developmental and not reported to the ABP" },
-          ].map((c, i) => (
-            <div key={i} style={{ background: C.surface, border: "1px solid " + C.border, borderRadius: 12, padding: "18px 16px", display: "flex", gap: 12, alignItems: "flex-start" }}>
-              <span style={{ fontSize: 20, flexShrink: 0 }}>{c.icon}</span>
-              <span style={{ fontFamily: sans, fontSize: 15, color: C.text, lineHeight: 1.6 }}>{c.text}</span>
+        <div style={{ display: "grid", gap: 16, margin: "0 0 28px" }}>
+          {/* PURPOSE 1 */}
+          <div onClick={() => scrollTo("volume")} style={{ background: C.surface, border: "1px solid " + C.border, borderRadius: 14, padding: "24px 24px", cursor: "pointer", transition: "border-color .15s, box-shadow .15s", display: "grid", gridTemplateColumns: "56px 1fr", gap: 18, alignItems: "start" }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = C.accent; e.currentTarget.style.boxShadow = "0 4px 16px rgba(154,123,44,.08)"; }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = C.border; e.currentTarget.style.boxShadow = "none"; }}>
+            <div style={{ width: 56, height: 56, borderRadius: 14, background: C.amberSub, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 26 }}>{"\u{1F4CA}"}</div>
+            <div>
+              <div style={{ fontFamily: sans, fontSize: 12, fontWeight: 700, color: C.amber, textTransform: "uppercase", letterSpacing: ".08em", marginBottom: 4 }}>Purpose 1</div>
+              <div style={{ fontFamily: serif, fontSize: 20, fontWeight: 700, color: C.text, marginBottom: 8, lineHeight: 1.3 }}>Track your assessment volume</div>
+              <div style={{ fontFamily: sans, fontSize: 15.5, color: C.text2, lineHeight: 1.75 }}>See how many assessments you have, how they're distributed across EPAs, and where you may have gaps. This helps you ensure you're getting sufficient data for an accurate picture of your development.</div>
+              <div style={{ fontFamily: sans, fontSize: 13.5, fontWeight: 600, color: C.amber, marginTop: 10 }}>Learn more below {"\u2193"}</div>
             </div>
-          ))}
+          </div>
+
+          {/* PURPOSE 2 */}
+          <div onClick={() => scrollTo("data")} style={{ background: C.surface, border: "1px solid " + C.border, borderRadius: 14, padding: "24px 24px", cursor: "pointer", transition: "border-color .15s, box-shadow .15s", display: "grid", gridTemplateColumns: "56px 1fr", gap: 18, alignItems: "start" }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = C.accent; e.currentTarget.style.boxShadow = "0 4px 16px rgba(154,123,44,.08)"; }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = C.border; e.currentTarget.style.boxShadow = "none"; }}>
+            <div style={{ width: 56, height: 56, borderRadius: 14, background: C.greenSub, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 26 }}>{"\u{1F331}"}</div>
+            <div>
+              <div style={{ fontFamily: sans, fontSize: 12, fontWeight: 700, color: C.green, textTransform: "uppercase", letterSpacing: ".08em", marginBottom: 4 }}>Purpose 2</div>
+              <div style={{ fontFamily: serif, fontSize: 20, fontWeight: 700, color: C.text, marginBottom: 8, lineHeight: 1.3 }}>Promote your growth toward practice readiness</div>
+              <div style={{ fontFamily: sans, fontSize: 15.5, color: C.text2, lineHeight: 1.75 }}>Your supervision trends and narrative comments give you actionable feedback to drive your development. Use them to identify strengths, notice growth areas, and build learning goals with your faculty coach.</div>
+              <div style={{ fontFamily: sans, fontSize: 13.5, fontWeight: 600, color: C.amber, marginTop: 10 }}>Learn more below {"\u2193"}</div>
+            </div>
+          </div>
+
+          {/* PURPOSE 3 */}
+          <div onClick={() => scrollTo("ccc")} style={{ background: C.surface, border: "1px solid " + C.border, borderRadius: 14, padding: "24px 24px", cursor: "pointer", transition: "border-color .15s, box-shadow .15s", display: "grid", gridTemplateColumns: "56px 1fr", gap: 18, alignItems: "start" }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = C.accent; e.currentTarget.style.boxShadow = "0 4px 16px rgba(154,123,44,.08)"; }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = C.border; e.currentTarget.style.boxShadow = "none"; }}>
+            <div style={{ width: 56, height: 56, borderRadius: 14, background: "#EDE8F5", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 26 }}>{"\u{1F9ED}"}</div>
+            <div>
+              <div style={{ fontFamily: sans, fontSize: 12, fontWeight: 700, color: "#6B5B95", textTransform: "uppercase", letterSpacing: ".08em", marginBottom: 4 }}>Purpose 3</div>
+              <div style={{ fontFamily: serif, fontSize: 20, fontWeight: 700, color: C.text, marginBottom: 8, lineHeight: 1.3 }}>Help you and your program assess where you are</div>
+              <div style={{ fontFamily: sans, fontSize: 15.5, color: C.text2, lineHeight: 1.75 }}>The same data helps you and your program accurately understand where you are on your trajectory toward being able to perform the activities of a general pediatrician without supervision at the time of graduation. <span style={{ cursor: "pointer", color: C.amber, fontWeight: 600 }} onClick={e => { e.stopPropagation(); scrollTo("background"); }}>What does practice ready mean? {"\u2192"}</span></div>
+              <div style={{ fontFamily: sans, fontSize: 13.5, fontWeight: 600, color: C.amber, marginTop: 10 }}>Learn more below {"\u2193"}</div>
+            </div>
+          </div>
+        </div>
+
+        <div style={{ background: C.amberSub, borderLeft: "3.5px solid " + C.amber, borderRadius: "0 10px 10px 0", padding: "16px 20px", margin: "0 0 4px", fontFamily: sans, fontSize: 15.5, fontWeight: 500, color: C.text, lineHeight: 1.65 }}>
+          <strong>Current EPA assignments are developmental and are not reported to the ABP.</strong> They are intended to provide you with data to support your growth and to give your program more specific information to make decisions about your progress toward becoming practice ready.
         </div>
       </section>
 
